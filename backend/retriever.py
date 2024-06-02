@@ -1,4 +1,5 @@
 import glob
+import sys
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyMuPDFLoader, TextLoader
@@ -8,7 +9,8 @@ from langchain_community.vectorstores import Chroma
 from sentence_transformers import SentenceTransformer
 from typing import List
 
-from ..model import SentenceTransformerModel
+sys.path.extend("../")
+from model import SentenceTransformerModel
 
 model_name = "mixedbread-ai/mxbai-embed-large-v1"
 model_kwargs = {"device": "cuda"}
