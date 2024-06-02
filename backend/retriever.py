@@ -44,7 +44,7 @@ def get_retriever(doc_directory="./data", model_name=None, state_dict_path=None)
     else: embedding_model = default_embedding_model
 
     vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding_model)
-    retriever = vectordb.as_retriever(search_kwargs={"k": 15})
+    retriever = vectordb.as_retriever(search_type="similarity_score_threshold", search_kwargs={"k": 15, "score_threshold": 0.8})
     return retriever
 
 
