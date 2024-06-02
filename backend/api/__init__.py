@@ -1,1 +1,1 @@
-from api.openai_api import chat_completions
+from api.openai_api import get_chat_completions
