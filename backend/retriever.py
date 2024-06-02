@@ -9,6 +9,11 @@ from sentence_transformers import SentenceTransformer
 from typing import List
 
 
+model_name = "mixedbread-ai/mxbai-embed-large-v1"
+model_kwargs = {"device": "cuda"}
+default_embedding_model = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
+
+
 class MyEmbeddings:
     def __init__(self, model=None, state_dict_path=None):
         if not model: model = "all-MiniLM-L6-v2"
@@ -22,7 +27,7 @@ class MyEmbeddings:
             return self.model.encode([query])
 
 
-def get_retriever(doc_directory="./test_directory", model_name=None, state_dict_path=None):
+def get_retriever(doc_directory="./data", model_name=None, state_dict_path=None):
     all_splits = []
 
     for filename in os.listdir(doc_directory):
@@ -35,15 +40,11 @@ def get_retriever(doc_directory="./test_directory", model_name=None, state_dict_
             loader = TextLoader(os.path.join(doc_directory, filename), encoding="utf-8")
             text_data = loader.load()
             all_splits.extend(text_splitter.split_documents(text_data))
-    if not model_name and not state_dict_path:
-        model_name = "sentence-transformers/all-MiniLM-L6-v2"
-        model_kwargs = {"device": "cpu"}
-        embedding = HuggingFaceEmbeddings(model_name=model_name, model_kwargs=model_kwargs)
-    else:
-        embedding = MyEmbeddings(model_name, state_dict_path)
+    if model_name and state_dict_path: embedding_model = MyEmbeddings(model_name, state_dict_path)
+    else: embedding_model = default_embedding_model
 
-    vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding)
-    retriever = vectordb.as_retriever()
+    vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding_model)
+    retriever = vectordb.as_retriever(search_kwargs={"k": 15})
     return retriever
 
 
