@@ -27,4 +27,6 @@ class RequestHandler(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     print("Starting server")
     server = HTTPServer(("localhost", 8080), RequestHandler)
+    sa = server.socket.getsockname()
+    print("Serving HTTP on", sa[0], "port", sa[1], "...")
     server.serve_forever()

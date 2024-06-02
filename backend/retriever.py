@@ -25,7 +25,7 @@ class MyEmbeddings:
         return [self.model(t).tolist() for t in texts]
     
     def embed_query(self, query: str) -> List[float]:
-            return [self.model([query])]
+            return self.model(query).tolist()
 
 
 def get_retriever(doc_directory="./data", ckpt=None, use_saved=True):
@@ -53,4 +53,4 @@ def get_retriever(doc_directory="./data", ckpt=None, use_saved=True):
 
 
 if __name__ == "__main__":
-    print("\n".join([document.page_content for document in get_retriever().invoke("What is FOCUS?")]))
+    print("\n".join([document.page_content for document in get_retriever(ckpt="model/epoch=0-step=312.ckpt", use_saved=False).invoke("What is FOCUS?")]))

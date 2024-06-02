@@ -10,7 +10,7 @@ from retriever import get_retriever
 
 @chain
 def get_retrieval_chain(state: dict) -> Runnable:
-    retriever = get_retriever()
+    retriever = get_retriever(ckpt="model/epoch=0-step=312.ckpt")
     log = state["log"]
     query = log[-1]["content"]
 
