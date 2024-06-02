@@ -1,4 +1,4 @@
-import os
+import glob
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyMuPDFLoader, TextLoader
@@ -27,26 +27,29 @@ class MyEmbeddings:
             return self.model.encode([query])
 
 
-def get_retriever(doc_directory="./data", model_name=None, state_dict_path=None):
+def get_retriever(doc_directory="./data", model_name=None, state_dict_path=None, use_saved=True):
     all_splits = []
 
-    for filename in os.listdir(doc_directory):
+    for filename in glob.iglob(doc_directory + "/**/*", recursive=True):
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=300)
         if filename.endswith(".pdf"):
-            loader = PyMuPDFLoader(os.path.join(doc_directory, filename))
+            loader = PyMuPDFLoader(filename)
             PDF_data = loader.load()
             all_splits.extend(text_splitter.split_documents(PDF_data))
-        else:
-            loader = TextLoader(os.path.join(doc_directory, filename), encoding="utf-8")
+        elif filename.endswith(".txt") or filename.endswith(".md"):
+            loader = TextLoader(filename, encoding="utf-8")
             text_data = loader.load()
             all_splits.extend(text_splitter.split_documents(text_data))
     if model_name and state_dict_path: embedding_model = MyEmbeddings(model_name, state_dict_path)
     else: embedding_model = default_embedding_model
 
-    vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding_model)
-    retriever = vectordb.as_retriever(search_type="similarity_score_threshold", search_kwargs={"k": 15, "score_threshold": 0.8})
+    if use_saved:
+        try: vectordb = Chroma(persist_directory="./data/vectordb", embedding_function=embedding_model)
+        except: vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding_model, persist_directory="./data/vectordb")
+    else: vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding_model, persist_directory="./data/vectordb")
+    retriever = vectordb.as_retriever(search_kwargs={"k": 15})
     return retriever
 
 
 if __name__ == "__main__":
-    print("\n".join([document.page_content for document in get_retriever().invoke("What is FOCUS in document?")]))
+    print("\n".join([document.page_content for document in get_retriever().invoke("What is FOCUS?")]))
