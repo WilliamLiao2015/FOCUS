@@ -1,7 +1,7 @@
-from chains import chain
-from langchain_core.output_parsers import StrOutputParser
+from chains import get_retrieval_chain
 
 
 if __name__ == "__main__":
-    chain = chain | StrOutputParser()
-    print(chain.invoke({"input": "What is FOCUS?"}))
+    input = {"input": "What is FOCUS in document?"}
+    result = get_retrieval_chain(input)
+    print(result["input"])

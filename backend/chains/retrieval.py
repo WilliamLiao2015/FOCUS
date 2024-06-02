@@ -1,18 +1,23 @@
-from langchain import hub
 from langchain_core.runnables import Runnable
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain.chains.retrieval import create_retrieval_chain
-from langchain_openai import OpenAI
+from openai import OpenAI
 
 from retriever import get_retriever
 
 
-retrieval_qa_chat_prompt = hub.pull("langchain-ai/retrieval-qa-chat")
-llm = OpenAI(base_url="http://localhost:1234/v1")
+client = OpenAI(base_url="http://localhost:1234/v1", api_key="lm-studio")
 
 
-def get_stuff_documents_chain() -> Runnable:
-    return create_stuff_documents_chain(llm=llm, prompt=retrieval_qa_chat_prompt)
-
-def get_retrieval_chain() -> Runnable:
-    return create_retrieval_chain(retriever=get_retriever(), combine_docs_chain=get_stuff_documents_chain())
+def get_retrieval_chain(input) -> Runnable:
+    retriever = get_retriever()
+    context = "".join([f"{document.page_content}\n\n" for document in retriever.invoke(input["input"])])
+    system_prompt = f"Answer any use questions based solely on the context below:\n\n{context}"
+    print(system_prompt)
+    completion = client.chat.completions.create(
+        model="lmstudio-community/Meta-Llama-3-8B-Instruct-BPE-fix-GGUF",
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": input["input"]}
+        ],
+        temperature=0.7
+    )
+    return {"input": completion.choices[0].message.content}

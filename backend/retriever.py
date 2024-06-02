@@ -39,7 +39,7 @@ def get_retriever(doc_directory='./test_directory', model_name=None, state_dict_
 
     persist_directory = 'db'
     vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding, persist_directory=persist_directory)
-    retriever = vectordb.as_retriever()
+    retriever = vectordb.as_retriever(search_type="mmr", seach_kwargs={"k": 5})
     return retriever
 
 if __name__ == "__main__":
