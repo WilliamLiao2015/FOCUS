@@ -42,8 +42,7 @@ def get_retriever(doc_directory="./test_directory", model_name=None, state_dict_
     else:
         embedding = MyEmbeddings(model_name, state_dict_path)
 
-    persist_directory = "db"
-    vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding, persist_directory=persist_directory)
+    vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding)
     retriever = vectordb.as_retriever()
     return retriever
 
