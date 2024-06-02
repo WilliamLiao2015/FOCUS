@@ -8,6 +8,7 @@ from langchain_community.vectorstores import Chroma
 from sentence_transformers import SentenceTransformer
 from typing import List
 
+from ..model import SentenceTransformerModel
 
 model_name = "mixedbread-ai/mxbai-embed-large-v1"
 model_kwargs = {"device": "cuda"}
@@ -15,16 +16,14 @@ default_embedding_model = HuggingFaceEmbeddings(model_name=model_name, model_kwa
 
 
 class MyEmbeddings:
-    def __init__(self, model=None, state_dict_path=None):
-        if not model: model = "all-MiniLM-L6-v2"
-        self.model = SentenceTransformer(model, trust_remote_code=True)
-        if state_dict_path: self.model.load_state_dict(state_dict_path)
+    def __init__(self, ckpt):
+        self.model = SentenceTransformerModel.load_from_checkpoint(ckpt)
 
     def embed_documents(self, texts: List[str]) -> List[List[float]]:
-        return [self.model.encode(t).tolist() for t in texts]
+        return [self.model(t).tolist() for t in texts]
     
     def embed_query(self, query: str) -> List[float]:
-            return self.model.encode([query])
+            return self.model([query])
 
 
 def get_retriever(doc_directory="./data", model_name=None, state_dict_path=None, use_saved=True):
