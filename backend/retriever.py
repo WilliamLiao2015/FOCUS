@@ -25,7 +25,7 @@ class MyEmbeddings:
         return [self.model(t).tolist() for t in texts]
     
     def embed_query(self, query: str) -> List[float]:
-            return self.model([query]).tolist()
+            return [self.model([query])]
 
 
 def get_retriever(doc_directory="./data", ckpt=None, use_saved=True):
