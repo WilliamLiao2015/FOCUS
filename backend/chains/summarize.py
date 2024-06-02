@@ -19,6 +19,6 @@ def summarize_chain(state: dict) -> Runnable:
         "type": "summarize",
         "role": "assistant",
         "content": output,
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     })
     return {"log": log}
