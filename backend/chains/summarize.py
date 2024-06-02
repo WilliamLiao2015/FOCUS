@@ -1,8 +1,7 @@
-from datetime import datetime
-
 from langchain_core.runnables import Runnable, chain
 
-from api.openai_api import get_chat_completions
+from api import get_chat_completions
+from utils import get_time
 
 
 @chain
@@ -19,6 +18,6 @@ def summarize_chain(state: dict) -> Runnable:
         "type": "summarize",
         "role": "assistant",
         "content": output,
-        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "time": get_time()
     })
     return {"log": log}

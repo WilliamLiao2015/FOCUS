@@ -1,8 +1,7 @@
 import json
 
-from datetime import datetime
-
 from chains import chain
+from utils import get_time
 
 
 if __name__ == "__main__":
@@ -12,12 +11,12 @@ if __name__ == "__main__":
                 "type": "query",
                 "role": "user",
                 "content": "What is FOCUS in document?",
-                "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                "time": get_time()
             }
         ]
     })
 
-    with open(f"./logs/output {datetime.now().strftime('%Y-%m-%d %H-%M-%S')}.json", "w", encoding="utf-8") as fp:
+    with open(f"./logs/output {get_time()}.json", "w", encoding="utf-8") as fp:
         json.dump(results, fp, indent=2)
 
     print(results["log"][-1]["content"])

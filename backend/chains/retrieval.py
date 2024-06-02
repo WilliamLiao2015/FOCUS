@@ -1,8 +1,7 @@
-from datetime import datetime
-
 from langchain_core.runnables import Runnable, chain
 
 from api import get_chat_completions
+from utils import get_time
 from retriever import get_retriever
 
 
@@ -21,6 +20,6 @@ def get_retrieval_chain(state: dict) -> Runnable:
         "type": "retrieval",
         "role": "assistant",
         "content": output,
-        "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "time": get_time()
     })
     return {"log": log}
