@@ -26,7 +26,7 @@ def get_retriever(doc_directory="./test_directory", model_name=None, state_dict_
     all_splits = []
 
     for filename in os.listdir(doc_directory):
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=20)
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=300)
         if filename.endswith(".pdf"):
             loader = PyMuPDFLoader(os.path.join(doc_directory, filename))
             PDF_data = loader.load()
