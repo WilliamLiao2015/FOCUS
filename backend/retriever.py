@@ -26,7 +26,7 @@ class MyEmbeddings:
             return self.model([query])
 
 
-def get_retriever(doc_directory="./data", model_name=None, state_dict_path=None, use_saved=True):
+def get_retriever(doc_directory="./data", ckpt=None, use_saved=True):
     all_splits = []
 
     for filename in glob.iglob(doc_directory + "/**/*", recursive=True):
@@ -39,7 +39,7 @@ def get_retriever(doc_directory="./data", model_name=None, state_dict_path=None,
             loader = TextLoader(filename, encoding="utf-8")
             text_data = loader.load()
             all_splits.extend(text_splitter.split_documents(text_data))
-    if model_name and state_dict_path: embedding_model = MyEmbeddings(model_name, state_dict_path)
+    if ckpt: embedding_model = MyEmbeddings(ckpt)
     else: embedding_model = default_embedding_model
 
     if use_saved:
