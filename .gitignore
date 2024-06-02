@@ -1,9 +1,11 @@
 # Byte-compiled / optimized / DLL files
 .vscode/
 db/
+lightning_logs/
 __pycache__/
 *.py[cod]
 *$py.class
+*.pth
 
 # C extensions
 *.so
