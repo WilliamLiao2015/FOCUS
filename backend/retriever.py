@@ -1,10 +1,9 @@
 import os
 
-from langchain.document_loaders import PyMuPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import Chroma
-from langchain.chains import RetrievalQA
+from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import Chroma
 
 
 def get_retriever(doc_directory="./test_directory"):
@@ -24,14 +23,6 @@ def get_retriever(doc_directory="./test_directory"):
     vectordb = Chroma.from_documents(documents=all_splits, embedding=embedding, persist_directory=persist_directory)
     retriever = vectordb.as_retriever()
     return retriever
-
-
-# qa = RetrievalQA.from_chain_type(
-#     llm=llm, 
-#     chain_type="stuff", 
-#     retriever=retriever, 
-#     verbose=True
-# )
 
 
 if __name__ == "__main__":
