@@ -11,13 +11,13 @@ if __name__ == "__main__":
             {
                 "type": "query",
                 "role": "user",
-                "content": "What is FOCUS in document?",
+                "content": "What is FOCUS?", # How old is Alison Hawk?
                 "time": get_time()
             }
         ]
     })
 
-    with open(f"./logs/output {get_time()}.json", "w", encoding="utf-8") as fp:
+    with open(f"./logs/output {get_time().replace(':', '-')}.json", "w", encoding="utf-8") as fp:
         json.dump(results, fp, indent=2)
 
     print(results["log"][-1]["content"])
