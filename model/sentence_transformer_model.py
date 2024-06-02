@@ -20,7 +20,7 @@ def random_drop(texts: List[str]):
 class SentenceTransformerModel(L.LightningModule):
     def __init__(self, batch_size=4, n_ctx=512, n_emb=1024, learning_rate=1e-5, temperature=0.05):
         super(SentenceTransformerModel, self).__init__()
-        self.model_name = "intfloat/e5-large-v2"
+        self.model_name = "all-MiniLM-L12-v2"
 
         self.batch_size = batch_size
         self.n_ctx = n_ctx
@@ -33,7 +33,7 @@ class SentenceTransformerModel(L.LightningModule):
         self.embedding_model.eval()
 
         self.seq = nn.Sequential(
-            nn.Linear(1024, 2048),
+            nn.Linear(384, 2048),
             nn.ReLU(),
             nn.Linear(2048, 1024),
             nn.ReLU(),
