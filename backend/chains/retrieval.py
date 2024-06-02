@@ -11,7 +11,6 @@ def get_retrieval_chain(input) -> Runnable:
     retriever = get_retriever()
     context = "".join([f"{document.page_content}\n\n" for document in retriever.invoke(input["input"])])
     system_prompt = f"Answer any use questions based solely on the context below:\n\n{context}"
-    print(system_prompt)
     completion = client.chat.completions.create(
         model="lmstudio-community/Meta-Llama-3-8B-Instruct-BPE-fix-GGUF",
         messages=[
