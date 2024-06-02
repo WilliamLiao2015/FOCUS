@@ -25,13 +25,14 @@ def get_retrieval_chain(state: dict) -> Runnable:
                 history += f"{summary['time']}: {summary['content']}\n"
 
     system_context = f"Answer any questions based on the context below:\n\n{context}"
-    system_history = f"You may also use the following past history to answer user's new questions:\n\n{history}"
+    # system_history = f"You may also use the following past history to answer user's new questions:\n\n{history}"
 
     output = get_chat_completions([
         *log,
         {"role": "system", "content": system_context},
-        {"role": "system", "content": system_history},
-        {"role": "system", "content": f"When the context is different from the given history, you should respect what user said in the past, and try your best to give a new answer.\n\nCurrent time is: {get_time()}"}
+        {"role": "system", "content": "You can come up with a new answer on your own if there is no relevant information in the context."},
+        # {"role": "system", "content": system_history},
+        # {"role": "system", "content": f"When the context is different from the given history, you should respect what user said in the past, and try your best to give a new answer.\n\nCurrent time is: {get_time()}"}
     ])
     log.append({
         "type": "retrieval",
