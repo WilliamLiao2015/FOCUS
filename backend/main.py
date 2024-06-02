@@ -1,10 +1,11 @@
 import json
 
-from chains import chain
+from chains import get_chain
 from utils import get_time
 
 
 if __name__ == "__main__":
+    chain = get_chain()
     results = chain.invoke({
         "log": [
             {
